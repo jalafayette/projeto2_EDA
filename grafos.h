@@ -16,19 +16,28 @@ typedef struct registo1
  char frequencia; // frequencia antena
  int linha;       // localização antena
  int coluna;
- Adjacentes adjacentes; // antenas adjacentes
+ struct registo2 *adjacentes; // lista de adjacentes
  struct registo1 * seguinte;
 } * Vertices;
 
+typedef struct registo_Grafo {
+    char frequencia;         // Frequência do grafo
+    Vertices registo1;       // Lista de vértices do grafo
+    struct registo_Grafo *sequinte; // grafo sequinte
+} *Grafos;
 
 void inserirVertice(Vertices *g, int idV, char freq, int l, int c);
 
-void importar_dados(Vertices *g);
+void importar_dados(Grafos *grafos);
 
 void inserirAdjacente(Vertices g, int idV1, int idV2);
 
 void listarDados(Vertices g);
 
+void listarGrafos(Grafos grafos);
+
 void liberarGrafo(Vertices *g);
 
-#endif 
+void liberarGrafos(Grafos *grafos);
+
+#endif

@@ -27,13 +27,13 @@
       switch (opcao) 
       {
         case 1:
-        Vertices grafo = NULL; // Inicializa a lista ligada (grafo) de vértice(s)
+        Grafos grafo = NULL; // Inicializa a lista ligada (grafo) de vértice(s)
         importar_dados(&grafo); // Importa os dados do arquivo e preenche a lista ligada
         printf("Dados importados com sucesso!\n");
         printf("Lista de antenas:\n");
         printf("ID / Frequencia / Linha / Coluna / Adjacentes\n");
         printf("------------------------------------------\n");
-        listarDados(grafo); // Exibe os dados importados
+        listarGrafos(grafo); // Exibe os dados importados
         
         break;
              
@@ -41,7 +41,7 @@
         case 0:
 
         printf("Encerrando o programa.\n");
-        liberarGrafo(&grafo); // Libera a memória alocada para o grafo
+        liberarGrafos(&grafo); // Libera a memória alocada para os grafos
         exit(0);
 
         break;

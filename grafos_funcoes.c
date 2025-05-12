@@ -44,7 +44,7 @@ void inserirAdjacente(Vertices g, int idV1, int idV2) {
     }
 }
 
-void importar_dados(Vertices *g) 
+void importar_dados(Grafos *grafos) 
 {
     FILE *arquivo = fopen("grafo.txt", "r");
     if (!arquivo) {
@@ -64,7 +64,6 @@ void importar_dados(Vertices *g)
         int coluna = 0; // Coordenada X
         int linha_comprimento = strlen(linha_buffer);
 
-        
         // Remover o caractere de nova linha ('\n') no final da linha, se existir
         if (linha_buffer[linha_comprimento - 1] == '\n') 
         {
@@ -72,24 +71,44 @@ void importar_dados(Vertices *g)
             linha_comprimento--;
         }
 
-        
         // Processar cada caractere da linha
         for (int i = 0; i < linha_comprimento; i++) 
         {
             char freq = linha_buffer[i];
             if (freq != '.') // Se não for um espaço vazio
             { 
-                // Inserir o vértice na lista ligada
-                inserirVertice(g, idVertice, freq, linha, coluna);
-                
-                // Interligar o novo vértice com todos os outros vértices da mesma frequência
-                Vertices aux = *g;
+                // Buscar ou criar o grafo correspondente à frequência
+                Grafos grafoAtual = *grafos;
+                while (grafoAtual != NULL && grafoAtual->frequencia != freq) {
+                    grafoAtual = grafoAtual->sequinte;
+                }
+
+                if (grafoAtual == NULL) {
+                    // Criar um novo grafo para a frequência
+                    Grafos novoGrafo = (Grafos)malloc(sizeof(struct registo_Grafo));
+                    if (novoGrafo == NULL) {
+                        printf("Erro: Falha na alocação de memória para o grafo.\n");
+                        exit(1);
+                    }
+                    novoGrafo->frequencia = freq;
+                    novoGrafo->registo1 = NULL;
+                    novoGrafo->sequinte = *grafos;
+                    *grafos = novoGrafo;
+                    grafoAtual = novoGrafo;
+                }
+
+                // Inserir o vértice no grafo correspondente
+                inserirVertice(&(grafoAtual->registo1), idVertice, freq, linha, coluna);
+
+                // Interligar o novo vértice com todos os outros vértices do mesmo grafo
+                Vertices aux = grafoAtual->registo1;
                 while (aux != NULL) {
-                    if (aux->frequencia == freq && aux->idVertice != idVertice) {
-                        inserirAdjacente(*g, idVertice, aux->idVertice);
+                    if (aux->idVertice != idVertice) {
+                        inserirAdjacente(grafoAtual->registo1, idVertice, aux->idVertice);
                     }
                     aux = aux->seguinte;
                 }
+
                 idVertice++;
             }
             coluna++;
@@ -105,7 +124,7 @@ void importar_dados(Vertices *g)
 
 void listarDados(Vertices g) {
     while (g != NULL) {
-        printf("%d %c %d %d [", g->idVertice, g->frequencia, g->linha, g->coluna);
+        printf("%d %c (%d, %d) [", g->idVertice, g->frequencia, g->linha, g->coluna);
         Adjacentes aux = g->adjacentes;
         while (aux != NULL) {
             printf("%d ", aux->idVertice);
@@ -116,6 +135,13 @@ void listarDados(Vertices g) {
     }
 }
 
+void listarGrafos(Grafos grafos) {
+    while (grafos != NULL) {
+        printf("\nGrafo da frequência '%c':\n", grafos->frequencia);
+        listarDados(grafos->registo1);
+        grafos = grafos->sequinte;
+    }
+}
 
 void liberarGrafo(Vertices *g) 
 {
@@ -132,6 +158,14 @@ void liberarGrafo(Vertices *g)
   }
 }
 
+void liberarGrafos(Grafos *grafos) {
+    while (*grafos != NULL) {
+        Grafos temp = *grafos;
+        liberarGrafo(&(temp->registo1));
+        *grafos = temp->sequinte;
+        free(temp);
+    }
+}
 
 /*
 void listarcaminhosAUx(Adjacentes G[], int origem, int destino, int sequencia[], int posicao, int pesoTOtal)
