@@ -1,14 +1,22 @@
+/**
+ * @file grafos_funcoes.c
+ * @brief Implementação das funções para manipulação de grafos, incluindo importação,
+ *        listagem, buscas (DFS, BFS) e deteção de intersecções de segmentos.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "grafos.h"
 
 /**
- * @brief Importa dados de um arquivo e preenche a lista ligada de vértices e suas listas de adjacências.
- * @param g Ponteiro para a lista ligada de vértices.
+ * @brief Insere um novo vértice (antena) numa lista de vértices de um grafo.
+ * @param g Ponteiro para a cabeça da lista de vértices.
+ * @param idV Identificador único do novo vértice.
+ * @param freq Frequência de ressonância do novo vértice.
+ * @param l Coordenada linha da localização do novo vértice.
+ * @param c Coordenada coluna da localização do novo vértice.
+ * @note A inserção é feita no início da lista para eficiência (O(1)).
  */
-
- // Inserção de um novo vertice
 void inserirVertice(Vertices *g, int idV, char freq, int l, int c) 
 {
     Vertices novo = (Vertices)malloc(sizeof(struct registo1));
@@ -320,8 +328,6 @@ int vazia(Pilha pilha_cabeca)
 {
     return (pilha_cabeca == NULL);
 }
-
-// ... (código anterior, como a função vazia) ...
 
 /**
  * @brief Realiza uma Busca em Profundidade (DFS) em um grafo a partir de um vértice inicial.
@@ -878,45 +884,3 @@ void encontrarInterseccoesSegmentosDetalhado(Grafos todosGrafos, char freqA, cha
 
 
 
-
-/*
-// Arvore Binaria de Procura
-int altura (ABP a)
-{
-    if (a == NULL)
-        return 0;
-    else
-    {
-        int altEsq = altura(a->esq);
-        int altDir = altura(a->dir);
-        
-        if (altEsq > altDir)
-        {
-            return altEsq + 1;
-        }
-        else
-        {
-            return altDir + 1;
-        }
-    }
-
-}
-*/
-
-/*
-// listar todos os registos presentes num determinado nível
-void listarNivel(ABP a, int nivel)
-{
-    if (a == NULL)
-        return;
-    if (nivel == 1)
-    {
-        printf("%d ", a->elem);
-    }
-    else
-    {
-        listarNivel(a->esq, nivel - 1);  // nivel - 1 para descer um nível
-        listarNivel(a->dir, nivel - 1);
-    }
-}
-*/
